@@ -43,13 +43,16 @@ pub struct ConfigOptsServe {
 
 #[derive(Clone, Debug, Default, Deserialize, Parser)]
 pub struct ConfigOptsAddModule {
+    /// Path where the module should be added. The given path must contain either a mod.rs, lib.rs or main.rs
     #[clap(parse(from_os_str))]
     pub target: PathBuf,
+    /// The name of the new module
+    pub name: String,
 }
 
 #[derive(Clone, Debug, Default, Deserialize, Parser)]
 pub struct ConfigOptsAddComponent {
-    /// Path where the component should be added to
+    /// Path where the component should be added to. The given path must contain a mod.rs
     #[clap(parse(from_os_str))]
     pub target: PathBuf,
     /// The name of the new component

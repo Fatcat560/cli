@@ -67,7 +67,8 @@ fn produce_component(cfg: ConfigOptsAddComponent) -> Result<()> {
     //  - create a directory with name {name}
     //  - add a mod.rs inside with the component code
     //  - modify parent mod.rs to include and use {name}
-    write_component_to_disk(&pascal_name, cfg.skip_props, cfg.target.join(&snake_name))?;
+    let new_dir = cfg.target.join(&snake_name);
+    write_component_to_disk(&pascal_name, cfg.skip_props, new_dir)?;
     modify_parent_module(cfg.target.join("mod.rs"), &snake_name)?;
     Ok(())
 }
@@ -102,6 +103,25 @@ fn modify_parent_module(mod_file: PathBuf, name: &str) -> Result<()> {
 }
 
 fn produce_module(cfg: ConfigOptsAddModule) -> Result<()> {
-    dbg!(cfg);
+    // A module can be:
+    //  - a sub-module of an already existing module
+    //  - a new module in the src directory (must then include itself in either lib.rs or main.rs, whichever is present)
+    if !cfg.target.is_dir() {
+        log::error!("🛑 Target path is not a directory");
+        return Ok(());
+    }
+    let snake_name = cfg.name.to_case(Case::Snake);
+    let allowed_files = ["mod.rs", "lib.rs", "main.rs"];
+    for f in allowed_files {
+        let parent_module = cfg.target.join(f);
+        if parent_module.exists() {
+            let new_dir = cfg.target.join(&snake_name);
+            fs::create_dir_all(&new_dir)?;
+            File::create(new_dir.join("mod.rs"))?;
+            modify_parent_module(parent_module, &snake_name)?;
+            return Ok(());
+        }
+    }
+    log::error!("🛑 No suitable top-level file found. Make sure your target path contains either a mod.rs, lib.rs or main.rs");
     Ok(())
 }
