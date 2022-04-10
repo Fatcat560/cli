@@ -4,8 +4,9 @@ pub mod clean;
 pub mod config;
 pub mod create;
 pub mod serve;
-pub mod translate;
 pub mod tool;
+pub mod translate;
+pub mod version;
 
 use crate::{
     cfg::{ConfigOptsBuild, ConfigOptsServe},
@@ -59,4 +60,6 @@ pub enum Commands {
     /// Install  & Manage tools for Dioxus-cli.
     #[clap(subcommand)]
     Tool(tool::Tool),
+    ///Print Dioxus and Rust Versions
+    Version(version::Version),
 }

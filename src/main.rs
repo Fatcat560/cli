@@ -48,6 +48,11 @@ async fn main() -> Result<()> {
                 log::error!("tool error: {}", e);
             }
         }
+        Commands::Version(opts) => {
+            if let Err(e) = opts.version() {
+                log::error!("version error: {}", e);
+            }
+        }
     }
 
     Ok(())
