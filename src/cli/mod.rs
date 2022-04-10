@@ -1,3 +1,4 @@
+pub mod add;
 pub mod build;
 pub mod cfg;
 pub mod clean;
@@ -44,6 +45,10 @@ pub struct Cli {
 
 #[derive(Parser)]
 pub enum Commands {
+    /// Add a new module or component
+    #[clap(subcommand)]
+    Add(add::Add),
+
     /// Build the Rust WASM app and all of its assets.
     Build(build::Build),
     /// Translate some source file into Dioxus code.

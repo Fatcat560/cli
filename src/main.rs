@@ -53,6 +53,11 @@ async fn main() -> Result<()> {
                 log::error!("version error: {}", e);
             }
         }
+        Commands::Add(opts) => {
+            if let Err(e) = opts.add() {
+                log::error!("add error: {}", e);
+            }
+        }
     }
 
     Ok(())

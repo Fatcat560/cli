@@ -41,6 +41,24 @@ pub struct ConfigOptsServe {
     pub platform: Option<String>,
 }
 
+#[derive(Clone, Debug, Default, Deserialize, Parser)]
+pub struct ConfigOptsAddModule {
+    #[clap(parse(from_os_str))]
+    pub target: PathBuf,
+}
+
+#[derive(Clone, Debug, Default, Deserialize, Parser)]
+pub struct ConfigOptsAddComponent {
+    /// Path where the component should be added to
+    #[clap(parse(from_os_str))]
+    pub target: PathBuf,
+    /// The name of the new component
+    pub name: String,
+    /// Do not generate a property struct
+    #[clap(long)]
+    pub skip_props: bool,
+}
+
 /// Ensure the given value for `--public-url` is formatted correctly.
 pub fn parse_public_url(val: &str) -> String {
     let prefix = if !val.starts_with('/') { "/" } else { "" };
